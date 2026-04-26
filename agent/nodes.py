@@ -1,4 +1,9 @@
 from agent.state import AgentState
+from agent.tools import (
+    search_available_properties,
+    get_listing_details,
+    create_booking,
+)
 
 
 # -----------------------------
@@ -27,7 +32,7 @@ def parse_intent_node(state: AgentState) -> AgentState:
 # 2. Routing Function
 # -----------------------------
 def route_next(state: AgentState) -> str:
-    """Return next node name based on intent."""
+    """Return next node based on intent."""
     if state["intent"] in ["search", "details", "book"]:
         return "tool_node"
     return "fallback_node"
@@ -37,36 +42,30 @@ def route_next(state: AgentState) -> str:
 # 3. Tool Node
 # -----------------------------
 def tool_node(state: AgentState) -> AgentState:
-    """Simulate tool execution based on intent."""
+    """Execute appropriate tool based on intent."""
+
     intent = state["intent"]
 
-    # NOTE: In real implementation, LangChain tools would be called here
-
     if intent == "search":
-        result = {
-            "listings": [
-                {"id": 101, "title": "Sea View Apartment", "price": 4500}
-            ]
-        }
+        result = search_available_properties.invoke({
+            "location": state.get("location", "Cox's Bazar"),
+            "checkin_date": state.get("checkin_date", "2026-05-01"),
+            "checkout_date": state.get("checkout_date", "2026-05-03"),
+            "guests": state.get("guests", 2),
+        })
 
     elif intent == "details":
-        result = {
-            "listing": {
-                "id": state.get("listing_id", 101),
-                "title": "Sea View Apartment",
-                "description": "Ocean-facing apartment",
-                "price": 4500,
-            }
-        }
+        result = get_listing_details.invoke({
+            "listing_id": state.get("listing_id", 101),
+        })
 
     elif intent == "book":
-        result = {
-            "booking": {
-                "id": 5001,
-                "status": "confirmed",
-                "total_price": 9000,
-            }
-        }
+        result = create_booking.invoke({
+            "listing_id": state.get("listing_id", 101),
+            "checkin_date": state.get("checkin_date", "2026-05-01"),
+            "checkout_date": state.get("checkout_date", "2026-05-03"),
+            "guests": state.get("guests", 2),
+        })
 
     else:
         result = {}
