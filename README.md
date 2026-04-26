@@ -102,3 +102,70 @@ class AgentState(TypedDict):
 - Handles unsupported requests by escalating to a human
 - Updates: response
 - Next: END
+
+
+## 1.5 Tool Definitions
+
+### 1. search_available_properties
+```
+Input:
+{
+  "location": "string",
+  "checkin_date": "string",
+  "checkout_date": "string",
+  "guests": "int"
+}
+
+Output:
+[
+  {
+    "listing_id": 101,
+    "title": "Sea View Apartment",
+    "price_per_night": 4500
+  }
+]
+
+Used when:
+User wants to search for available properties.
+```
+
+### 2. get_listing_details
+```
+Input:
+{
+  "listing_id": "int"
+}
+
+Output:
+{
+  "listing_id": 101,
+  "title": "Sea View Apartment",
+  "description": "Ocean-facing apartment with balcony",
+  "price_per_night": 4500,
+  "max_guests": 4
+}
+
+Used when:
+User asks for details of a specific listing.
+```
+
+### 3. create_booking
+```
+Input:
+{
+  "listing_id": "int",
+  "checkin_date": "string",
+  "checkout_date": "string",
+  "guests": "int"
+}
+
+Output:
+{
+  "booking_id": 5001,
+  "status": "confirmed",
+  "total_price": 9000
+}
+
+Used when:
+User confirms a booking.
+```
