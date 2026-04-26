@@ -1,16 +1,31 @@
-from langchain_community.tools import tool
+from langchain_core.tools import tool  
+from pydantic import BaseModel
 
 
-# -----------------------------
-# Tools
-# -----------------------------
+# --- Input Schemas ---
+class SearchInput(BaseModel):
+    location: str
+    checkin_date: str
+    checkout_date: str
+    guests: int
 
-@tool
+class DetailsInput(BaseModel):
+    listing_id: int
+
+class BookingInput(BaseModel):
+    listing_id: int
+    checkin_date: str
+    checkout_date: str
+    guests: int
+
+
+# --- Tools ---
+@tool(args_schema=SearchInput)
 def search_available_properties(
     location: str,
     checkin_date: str,
     checkout_date: str,
-    guests: int
+    guests: int,
 ) -> list:
     """Search available properties based on user criteria."""
     return [
@@ -23,9 +38,9 @@ def search_available_properties(
     ]
 
 
-@tool
+@tool(args_schema=DetailsInput)
 def get_listing_details(listing_id: int) -> dict:
-    """Get detailed information about a listing."""
+    """Get detailed information about a specific listing."""
     return {
         "listing_id": listing_id,
         "title": "Sea View Apartment",
@@ -35,14 +50,14 @@ def get_listing_details(listing_id: int) -> dict:
     }
 
 
-@tool
+@tool(args_schema=BookingInput)
 def create_booking(
     listing_id: int,
     checkin_date: str,
     checkout_date: str,
-    guests: int
+    guests: int,
 ) -> dict:
-    """Create a booking for a listing."""
+    """Create a confirmed booking for a listing."""
     return {
         "booking_id": 5001,
         "status": "confirmed",
