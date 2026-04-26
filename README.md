@@ -45,3 +45,33 @@ Step-by-step flow:
 9. The result is stored in `tool_result`.
 10. The response_node formats a natural language reply using the LLM.
 11. FastAPI returns the final response to the user.
+
+## 1.3 LangGraph State Design
+
+```python
+from typing import TypedDict, Optional, Dict, Any
+
+class AgentState(TypedDict):
+    user_message: str
+    intent: Optional[str]
+    location: Optional[str]
+    checkin_date: Optional[str]
+    checkout_date: Optional[str]
+    guests: Optional[int]
+    listing_id: Optional[int]
+    tool_result: Optional[Dict[str, Any]]
+    response: Optional[str]
+```
+## ✍️ Add explanation right after:
+
+```markdown
+- user_message → latest user input
+- intent → determines which action (search/details/book)
+- location → required for searching listings
+- checkin_date → booking start date
+- checkout_date → booking end date
+- guests → number of guests for filtering
+- listing_id → identifies selected property
+- tool_result → stores output from tool calls
+- response → final reply returned to user
+```
