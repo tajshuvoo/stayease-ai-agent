@@ -169,3 +169,26 @@ Output:
 Used when:
 User confirms a booking.
 ```
+
+## 1.6 Database Schema Design
+
+### listings
+- id (INTEGER, PRIMARY KEY)
+- title (TEXT)
+- location (TEXT)
+- price_per_night (INTEGER)
+- max_guests (INTEGER)
+- description (TEXT)
+
+### bookings
+- id (INTEGER, PRIMARY KEY)
+- listing_id (INTEGER, FOREIGN KEY)
+- checkin_date (DATE)
+- checkout_date (DATE)
+- guests (INTEGER)
+- total_price (INTEGER)
+
+### conversations
+- id (TEXT, PRIMARY KEY)
+- messages (JSONB)
+- created_at (TIMESTAMP)
