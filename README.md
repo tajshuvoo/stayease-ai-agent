@@ -75,3 +75,30 @@ class AgentState(TypedDict):
 - tool_result → stores output from tool calls
 - response → final reply returned to user
 ```
+
+## 1.4 Node Design
+
+### 1. parse_intent
+- Extracts intent and entities from the user message using LLM
+- Updates: intent, location, checkin_date, checkout_date, guests, listing_id
+- Next: route_node
+
+### 2. route_node
+- Decides which action to take based on intent
+- Updates: none
+- Next: tool_node or fallback_node
+
+### 3. tool_node
+- Calls the appropriate tool (search, details, booking)
+- Updates: tool_result
+- Next: response_node
+
+### 4. response_node
+- Formats tool output into a user-friendly response using LLM
+- Updates: response
+- Next: END
+
+### 5. fallback_node
+- Handles unsupported requests by escalating to a human
+- Updates: response
+- Next: END
